@@ -1,0 +1,95 @@
+int isAsciiDigit(int x) {
+  int up_num = x + (~58 + 1);  //最高位为1
+  int low_num = x + (~48 + 1); //最高位为0
+  
+  int Is_up_legal = (!((up_num >> 31) + 1));
+  int Is_down_legal = ((low_num >> 31) + 1);
+  
+  return   (Is_up_legal & Is_down_legal);
+}
+/* 
+ * anyEvenBit - return 1 if any even-numbered bit in word set to 1
+ *   Examples anyEvenBit(0xA) = 0, anyEvenBit(0xE) = 1
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 12
+ *   Rating: 2
+ */
+int anyEvenBit(int x) {
+  int x1 = x >> 8;
+  int x2 = x1 >> 8;
+  int x3 = x2 >> 8;
+  return !!( ( x | x1 | x2 | x3 )& 0x55);
+//8位一组，将所有组的1重叠到最低的8位，之后与01010101做运算判断
+}
+/* 
+ * copyLSB - set all bits of result to least significant bit of x
+ *   Example: copyLSB(5) = 0xFFFFFFFF, copyLSB(6) = 0x00000000
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 5
+ *   Rating: 2
+ */
+int copyLSB(int x) {
+  int t=x&1;
+  return(~t+1);
+  //t=x&1判断0位为0还是1，其余位均为零，~t+1为所求
+}
+/* 
+ * leastBitPos - return a mask that marks the position of the
+ *               least significant 1 bit. If x == 0, return 0
+ *   Example: leastBitPos(96) = 0x20
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 6
+ *   Rating: 2 
+ */
+int leastBitPos(int x) {
+  int t=~x+1;
+  return t&x;
+  //x取反后，最小的1以下均为零，此时+1后进位到目标数
+}
+/* 
+ * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
+ *  Round toward zero
+ *   Examples: divpwr2(15,1) = 7, divpwr2(-33,4) = -2
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 15
+ *   Rating: 2
+ */
+int divpwr2(int x, int n) {
+   int t = x>>n;
+   int fu = x>>31+1;
+   int t2= t<<n;
+   int con = t2^x;
+   return(t+((!fu)&(!!n)&(con)));
+   //负数，需要向上取整。
+   //如果 n=0 应该为 x。
+   //如果能够整除，就不需要取整操作。
+}
+
+
+/*
+ * bitCount - returns count of number of 1's in word
+ *   Examples: bitCount(5) = 2, bitCount(7) = 3
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 40
+ *   Rating: 4
+ */
+int bitCount(int x) {
+  int mask = (0x11 <<24) | (0x11 << 16) | (0x11 << 8) |(0x11) ;
+
+  int temp = x & mask;
+  x = x >> 1;
+  temp = temp + (x & mask); 
+  x = x >> 1;
+  temp = temp + (x & mask); 
+  x = x >> 1;
+  temp = temp + (x & mask); 
+  
+  return ((temp & 0xf) + 
+          ( (temp >> 4) & 0xf )+ 
+          ( (temp >> 8) & 0xf )+
+          ( (temp >> 12) & 0xf )+
+          ( (temp >> 16) & 0xf )+
+          ( (temp >> 20) & 0xf )+
+          ( (temp >> 24) & 0xf )+
+          ( (temp >> 28) & 0xf ));
+}
