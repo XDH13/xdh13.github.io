@@ -93,3 +93,79 @@ int bitCount(int x) {
           ( (temp >> 24) & 0xf )+
           ( (temp >> 28) & 0xf ));
 }
+int conditional(int x, int y, int z) {
+  return 2;
+}
+/* 
+ * isNonNegative - return 1 if x >= 0, return 0 otherwise 
+ *   Example: isNonNegative(-1) = 0.  isNonNegative(0) = 1.
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 6
+ *   Rating: 3
+ */
+int isNonNegative(int x) {
+  int isnegetive = x>>31&1;
+  return !!(isnegetive&1);
+}
+/* 
+ * isGreater - if x > y  then return 1, else return 0 
+ *   Example: isGreater(4,5) = 0, isGreater(5,4) = 1
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 24
+ *   Rating: 3
+ */
+int isGreater(int x, int y) {
+  return !!(x+(~y+1))
+}
+/* 
+ * absVal - absolute value of x
+ *   Example: absVal(-1) = 1.
+ *   You may assume -TMax <= x <= TMax
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 10
+ *   Rating: 4
+ */
+int absVal(int x) {
+  int isnegtive = x>>31&1;// ne 1; po 0;
+  return (isnegtive & (~x))|(!(isnegtive)&(~x+1));
+}
+/*
+ * isPower2 - returns 1 if x is a power of 2, and 0 otherwise
+ *   Examples: isPower2(5) = 0, isPower2(8) = 1, isPower2(0) = 0
+ *   Note that no negative number is a power of 2.
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 20
+ *   Rating: 4
+ */
+int isPower2(int x) {
+  int isnegtive = x>>31&1;
+  int rev = ~x+1;
+  return (!(isnegtive)&!(rev+x));
+}
+/* 
+ * float_neg - Return bit-level equivalent of expression -f for
+ *   floating point argument f.
+ *   Both the argument and result are passed as unsigned int's, but
+ *   they are to be interpreted as the bit-level representations of
+ *   single-precision floating point values.
+ *   When argument is NaN, return argument.
+ *   Legal ops: Any integer/unsigned operations incl. ||, &&. also if, while
+ *   Max ops: 10
+ *   Rating: 2
+ */
+unsigned float_neg(unsigned uf) {
+ unsigned exp = uf>>23&0xFF;
+ 
+}
+/* 
+ * float_i2f - Return bit-level equivalent of expression (float) x
+ *   Result is returned as unsigned int, but
+ *   it is to be interpreted as the bit-level representation of a
+ *   single-precision floating point values.
+ *   Legal ops: Any integer/unsigned operations incl. ||, &&. also if, while
+ *   Max ops: 30
+ *   Rating: 4
+ */
+unsigned float_i2f(int x) {
+  return 2;
+}
