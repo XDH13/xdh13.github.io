@@ -153,10 +153,14 @@ int isPower2(int x) {
  *   Max ops: 10
  *   Rating: 2
  */
-unsigned float_neg(unsigned uf) {
- unsigned exp = uf>>23&0xFF;
- 
-}
+unsigned float_neg(unsigned uf){
+unsigned exp = uf>>23 &0xFF;
+unsigned frac = uf & 0x7FFFFF;
+if(exp==0xFF && frac!=0)
+return uf;
+unsigned mask = 1<<31;
+return uf ^ mask;
+}//注意NaN
 /* 
  * float_i2f - Return bit-level equivalent of expression (float) x
  *   Result is returned as unsigned int, but
@@ -167,5 +171,39 @@ unsigned float_neg(unsigned uf) {
  *   Rating: 4
  */
 unsigned float_i2f(int x) {
-  return 2;
+if(x==0)
+return 0;
+unsigned sign = !!(x>>31);
+if(x<0)
+x = ~x+1;
+unsigned exp =127;
+unsigned frac =x;
+//find the highest bit
+unsigned j;
+for (j = (sizeof(int) << 3) - 1; j >= 0; --j) {
+if ((frac >> j) & 1)
+break;
 }
+if(j<23){
+frac <<=(23-j);
+exp += j;
+}
+else{
+frac>>=(j-23);
+exp +=j;
+unsigned mask = (1 << (j - 23)) - 1;
+if ((x&mask) >(1 << (j - 24)))
+frac++; //需要舍入到大值
+else if ((x&mask) == 1 << (j - 24) && (frac & 1))
+frac++; //舍入到偶数
+if (frac == (1 << 24))
+exp++; //舍入到偶数超过(1<<24) - 1，指数需要再加1
+}
+frac&=0x7FFFFF;
+return (sign<<31) | (exp<<23) | frac;
+}
+//首先:要找到该int的最高位数，这样确定位移的大小
+
+//当左移时，自然不用考虑舍入的问题。
+
+//当右移时，要考虑最大舍入+偶数舍入，这是最需要思考的地方
